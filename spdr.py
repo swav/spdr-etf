@@ -27,7 +27,8 @@ def calc_for(sym, data_file_path):
             1: list(map(calc, back_1, a))}
 
 def summarize(map_list):
-    for i in range(3):
+    result = []
+    for i in range(len(map_list.get(12))):
         (dates12, rs12) = map_list.get(12)[i]
         (dates6, rs6) = map_list.get(6)[12-6+i]
         (dates3, rs3) = map_list.get(3)[12-3+i]
@@ -36,11 +37,12 @@ def summarize(map_list):
         print("dates6:", dates6, "rs6=", rs6)
         print("dates3:", dates3, "rs3=", rs3)
         print("dates1:", dates1, "rs1=", rs1)
-        
+        result.append((dates12[0], rs12+rs6+rs3+rs1))
+    return result
     
 if __name__ == '__main__':
     xlp = calc_for('XLP', '/Users/swav/dev/projects/python/spdr-etf/data/XLP.csv')
-    summarize(xlp)
+    xlp_summary = summarize(xlp)
 
 ##>>> xlp.get(12)[0]
 ##(((2000, 1, 1), (1999, 1, 1)), -0.14079250975682303)
