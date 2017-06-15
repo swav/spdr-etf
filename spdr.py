@@ -15,11 +15,38 @@ def calc(shorter_list_tuple, longer_list_tuple):
 	dl, pl = longer_list_tuple
 	return ((ds, dl), (ps-pl)/ps)    
 
-def main():
-    a = parse_file('/Users/swav/dev/projects/python/spdr-etf/data/XLP.csv')
-    b = a[12:]
-    return list(map(calc, b, a))
+def calc_for(sym, data_file_path):
+    a = parse_file(data_file_path)
+    back_12 = a[12:]
+    back_6 = a[6:]
+    back_3 = a[3:]
+    back_1 = a[1:]
+    return {12: list(map(calc, back_12, a)),
+            6: list(map(calc, back_6, a)),
+            3: list(map(calc, back_3, a)),
+            1: list(map(calc, back_1, a))}
 
-#>>> c = main()
-#>>> c[0]
-#(((2000, 1, 1), (1999, 1, 1)), -0.14079250975682303)
+def summarize(map_list):
+    for i in range(3):
+        (dates12, rs12) = map_list.get(12)[i]
+        (dates6, rs6) = map_list.get(6)[12-6+i]
+        (dates3, rs3) = map_list.get(3)[12-3+i]
+        (dates1, rs1) = map_list.get(1)[12-1+i]
+        print("dates12:", dates12, "rs12=", rs12)
+        print("dates6:", dates6, "rs6=", rs6)
+        print("dates3:", dates3, "rs3=", rs3)
+        print("dates1:", dates1, "rs1=", rs1)
+        
+    
+if __name__ == '__main__':
+    xlp = calc_for('XLP', '/Users/swav/dev/projects/python/spdr-etf/data/XLP.csv')
+    summarize(xlp)
+
+##>>> xlp.get(12)[0]
+##(((2000, 1, 1), (1999, 1, 1)), -0.14079250975682303)
+##>>> xlp.get(6)[0]
+##(((1999, 7, 1), (1999, 1, 1)), -0.0812766031974639)
+##>>> xlp.get(3)[0]
+##(((1999, 4, 1), (1999, 1, 1)), -0.04836415693621042)
+##>>> xlp.get(1)[0]
+##(((1999, 2, 1), (1999, 1, 1)), -0.010607522399974314)
